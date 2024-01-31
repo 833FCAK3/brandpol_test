@@ -77,7 +77,7 @@ func main() {
     e.GET("/greet", func(c echo.Context) error {
         // Save timestamp to the database
         greeting := Greeting{
-            Message:   "Hello from Go!",
+            Message:   "Привет от Go!",
             CreatedAt: time.Now(),
         }
         db.Create(&greeting)
@@ -159,13 +159,14 @@ func main() {
 		}
 
 		// Save the entire response body as a single entry in the Echo application's database
+		data := string(body)
 		greetHistory := Python_Greet_History{
-			PythonGreetings: string(body),
+			PythonGreetings: data,
 		}
 		db.Create(&greetHistory)
 
 		// Return a response
-		return c.String(http.StatusOK, "Received and processed the data")
+		return c.String(http.StatusOK, data)
 	})
 
     e.Start(":" + strconv.Itoa(port))
