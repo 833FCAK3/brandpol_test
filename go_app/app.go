@@ -14,7 +14,6 @@ import (
 )
 
 type Greeting struct {
-	// Exclude the default fields by using struct tags
 	ID        uint      `gorm:"primaryKey" json:"id"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"-"`
@@ -134,11 +133,6 @@ func main() {
 			return c.String(http.StatusInternalServerError, "Error sending request to Python API")
 		}
 		defer response.Body.Close()
-		// if err != nil {
-		// 	errorMsg := fmt.Sprintf("Error sending request to Python API: %s", err.Error())
-		// 	return c.String(http.StatusInternalServerError, errorMsg)
-		// }
-		// defer response.Body.Close()
 
 		// Read the response body
 		body, err := io.ReadAll(response.Body)
