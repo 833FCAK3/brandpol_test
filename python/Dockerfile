@@ -1,8 +1,7 @@
-FROM python:3.11-slim-buster
+FROM python:3.11.6-slim-bookworm
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
-ARG ENV
 
 RUN mkdir -p /python/
 
@@ -15,9 +14,6 @@ RUN apt-get -y update \
 # Install python requirements
 COPY requirements.txt .
 RUN python -m pip install -r requirements.txt
-
-COPY pyproject.toml /python/pyproject.toml
-COPY setup.cfg /python/setup.cfg
 
 COPY python/ /python/
 WORKDIR /python/

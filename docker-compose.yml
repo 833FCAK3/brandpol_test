@@ -1,0 +1,61 @@
+version: "3.4"
+
+services:
+  py_postgres_db:
+    container_name: py_postgres_db
+    build: ./py_postgres
+    image: ${IMAGE_PY_POSTGRES_DB}
+    restart: always
+    volumes:
+      - py_postgres_db_volume:/var/lib/py_postgresql/data/
+    env_file:
+      - .env
+    ports:
+      - 5432:5432
+
+  go_postgres_db:
+    container_name: go_postgres_db
+    build: ./go_postgres
+    image: ${IMAGE_GO_POSTGRES_DB}
+    restart: always
+    volumes:
+      - go_postgres_db_volume:/var/lib/go_postgresql/data/
+    env_file:
+      - .env
+    ports:
+      - 5433:5432
+
+  py_app:
+    container_name: py_app
+    build:
+      context: .
+      dockerfile: ./python/Dockerfile
+    image: ${IMAGE_PY_APP}
+    restart: always
+    depends_on:
+      - py_postgres_db
+    env_file:
+      - .env
+    command: bash -c "uvicorn python.app:app --host 0.0.0.0 --port ${PY_PORT:-8000}" 
+    environment:
+      WAIT_HOSTS: py_postgres_db:5432
+
+  go_app:
+    container_name: go_app
+    build:
+      context: .
+      dockerfile: ./go/Dockerfile
+    image: ${IMAGE_GO_APP}
+    restart: always
+    depends_on:
+      - go_postgres_db
+    env_file:
+      - .env
+    command: bash -c "go run go/app.go" 
+    environment:
+      WAIT_HOSTS: go_postgres_db:5432
+
+
+volumes:
+  py_postgres_db_volume:
+  go_postgres_db_volume:
