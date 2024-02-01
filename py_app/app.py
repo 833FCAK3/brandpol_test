@@ -18,8 +18,8 @@ def greet(name: str = "пользователь", db: Session = Depends(get_post
     db_greeting = Greeting(name=name)
     db.add(db_greeting)
     db.commit()
-    data = json.dumps({"message": f"Привет, {name}, от Python!"}, ensure_ascii=False)
-    return Response(status_code=200, content=data, media_type="application/json")
+    data = f"Привет, {name}, от Python!"
+    return Response(status_code=200, content=data, media_type="text/plain")
 
 
 @app.get("/greet/history")

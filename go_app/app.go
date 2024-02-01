@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
     "gorm.io/driver/postgres"
     "gorm.io/gorm"
     "github.com/labstack/echo/v4"
@@ -49,7 +48,7 @@ func main() {
     }
 
     // PostgreSQL connection string
-    dsn := "host=go_postgres_db user=postgres password=postgres dbname=postgres port=5433 sslmode=disable port=5432"
+    dsn := "host=go_postgres_db user=postgres password=postgres dbname=postgres port=5432 sslmode=disable"
 
     // Connect to the database
     db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
@@ -105,18 +104,17 @@ func main() {
 		}
 		defer response.Body.Close()
 
-		// Decode the JSON response from Python API
-		var pythonGreetResponse map[string]string
-		err = json.NewDecoder(response.Body).Decode(&pythonGreetResponse)
+		// Read the response body
+		body, err := io.ReadAll(response.Body)
 		if err != nil {
-			return c.String(http.StatusInternalServerError, "Error decoding Python API response")
+			return c.String(http.StatusInternalServerError, "Error reading response body")
 		}
 
 		// Save the received Python greeting to the database
-		pythonGreeting := pythonGreetResponse["message"]
+		pythonGreeting := string(body)
 		greeting := Python_Greet{
-			Name:      name,
-			PythonGreeting: pythonGreeting,
+			Name:			name,
+			PythonGreeting:	pythonGreeting,
 		}
 		db.Create(&greeting)
 
