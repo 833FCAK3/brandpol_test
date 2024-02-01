@@ -1,5 +1,7 @@
 FROM golang:1.21.6-alpine
 
+ENV TZ=$TIMEZONE
+
 WORKDIR /go_app
 
 COPY /go_app .

@@ -8,7 +8,6 @@ from starlette.responses import Response
 from database import get_postgres_db
 from models import Greeting
 
-
 app = FastAPI()
 
 

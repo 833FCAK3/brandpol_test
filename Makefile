@@ -1,4 +1,4 @@
-all: build down migrate up
+all: build migrate up
 
 build:
 	docker-compose build
