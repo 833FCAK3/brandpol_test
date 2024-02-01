@@ -63,6 +63,7 @@ func main() {
     // Create an Echo instance
     e := echo.New()
 
+	
     // Endpoint to greet and save timestamp to the database
     e.GET("/greet", func(c echo.Context) error {
         // Save timestamp to the database
@@ -95,7 +96,7 @@ func main() {
 		}
 
 		// Specify the URL to send the GET request to
-		pythonAPIURL := "http://localhost:8000/greet"
+		pythonAPIURL := "http://py_app:8000/greet"
 
 		// Send GET request to Python API
 		response, err := http.Get(fmt.Sprintf("%s?name=%s", pythonAPIURL, name))
@@ -127,7 +128,7 @@ func main() {
 	e.GET("/python_greet_history", func(c echo.Context) error {
 
 		// Specify the URL to send the GET request to
-		pythonAPIURL := "http://localhost:8000/greet/history"
+		pythonAPIURL := "http://py_app:8000/greet/history"
 
 		// Send GET request to Python API
 		response, err := http.Get(pythonAPIURL)

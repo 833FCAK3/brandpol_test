@@ -1,4 +1,4 @@
-version: "3.4"
+version: "3.8"
 
 services:
   py_postgres_db:
@@ -39,6 +39,8 @@ services:
     command: bash -c "uvicorn app:app --host 0.0.0.0 --port ${PY_PORT:-8000}" 
     environment:
       WAIT_HOSTS: py_postgres_db:5432
+    ports:
+      - 8000:8000
 
   go_app:
     container_name: go_app
@@ -54,6 +56,8 @@ services:
     command: sh -c "go run app.go"
     environment:
       WAIT_HOSTS: go_postgres_db:5432
+    ports:
+      - 8080:8080
 
 
 volumes:
