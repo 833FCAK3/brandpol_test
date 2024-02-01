@@ -4,7 +4,7 @@ from sqlalchemy import engine_from_config, pool
 
 from alembic import context
 from database import SQLALCHEMY_PY_POSTGRES_URL
-from python.models import Base
+from py_app.models import Base
 
 
 # this is the Alembic Config object, which provides

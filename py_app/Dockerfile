@@ -3,7 +3,7 @@ FROM python:3.11.6-slim-bookworm
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
-RUN mkdir -p /python/
+RUN mkdir -p /py_app/
 
 # Security updates & Update pip and setuptools
 RUN apt-get -y update \
@@ -15,8 +15,8 @@ RUN apt-get -y update \
 COPY requirements.txt .
 RUN python -m pip install -r requirements.txt
 
-COPY python/ /python/
-WORKDIR /python/
+COPY py_app/ /py_app/
+WORKDIR /py_app/
 
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.11.0/wait /wait
 RUN chmod +x /wait

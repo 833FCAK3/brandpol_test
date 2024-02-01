@@ -5,11 +5,9 @@ import (
     "gorm.io/driver/postgres"
     "gorm.io/gorm"
     "github.com/labstack/echo/v4"
-	"github.com/joho/godotenv"
 	"fmt"
 	"log"
     "os"
-	"path/filepath"
     "strconv"
     "net/http"
     "time"
@@ -38,15 +36,7 @@ type Python_Greet_History struct {
 }
 
 func main() {
-	// Get the absolute path to the .env file
-	envFilePath := filepath.Join("..", ".env") // Adjust the path as needed
-
-	// Load environment variables from .env file
-    if err := godotenv.Load(envFilePath); err != nil {
-        log.Fatal("Error loading .env file")
-    }
-
-    // Retrieve the port from the environment variables
+    // Retrieve port from the environment variables
     portStr := os.Getenv("GO_PORT")
     if portStr == "" {
         portStr = "8080" // Default port if not specified in .env
@@ -59,12 +49,12 @@ func main() {
     }
 
     // PostgreSQL connection string
-    dsn := "user=postgres password=postgres dbname=postgres sslmode=disable port=5433"
+    dsn := "host=go_postgres_db user=postgres password=postgres dbname=postgres port=5433 sslmode=disable port=5432"
 
     // Connect to the database
     db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
     if err != nil {
-        panic("failed to connect database")
+        panic("failed to connect database" + err.Error())
     }
 
     // Auto-migrate the Greeting table

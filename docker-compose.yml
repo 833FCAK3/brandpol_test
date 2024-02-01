@@ -29,14 +29,14 @@ services:
     container_name: py_app
     build:
       context: .
-      dockerfile: ./python/Dockerfile
+      dockerfile: ./py_app/Dockerfile
     image: ${IMAGE_PY_APP}
     restart: always
     depends_on:
       - py_postgres_db
     env_file:
       - .env
-    command: bash -c "uvicorn python.app:app --host 0.0.0.0 --port ${PY_PORT:-8000}" 
+    command: bash -c "uvicorn app:app --host 0.0.0.0 --port ${PY_PORT:-8000}" 
     environment:
       WAIT_HOSTS: py_postgres_db:5432
 
@@ -44,14 +44,14 @@ services:
     container_name: go_app
     build:
       context: .
-      dockerfile: ./go/Dockerfile
+      dockerfile: ./go_app/Dockerfile
     image: ${IMAGE_GO_APP}
     restart: always
     depends_on:
       - go_postgres_db
     env_file:
       - .env
-    command: bash -c "go run go/app.go" 
+    command: sh -c "go run app.go"
     environment:
       WAIT_HOSTS: go_postgres_db:5432
 
