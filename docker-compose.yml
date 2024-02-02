@@ -29,7 +29,7 @@ services:
     container_name: py_app
     build:
       context: .
-      dockerfile: ./py_app/Dockerfile
+      dockerfile: ./src/py_app/Dockerfile
     image: ${IMAGE_PY_APP}
     restart: always
     depends_on:
@@ -46,7 +46,7 @@ services:
     container_name: go_app
     build:
       context: .
-      dockerfile: ./go_app/Dockerfile
+      dockerfile: ./src/go_app/Dockerfile
     image: ${IMAGE_GO_APP}
     restart: always
     depends_on:

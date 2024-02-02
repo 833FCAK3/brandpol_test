@@ -4,7 +4,7 @@ ENV TZ=$TIMEZONE
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
-RUN mkdir -p /py_app/
+RUN mkdir -p /src/py_app/
 
 # Security updates & Update pip and setuptools
 RUN apt-get -y update \
@@ -16,8 +16,8 @@ RUN apt-get -y update \
 COPY requirements.txt .
 RUN python -m pip install -r requirements.txt
 
-COPY py_app/ /py_app/
-WORKDIR /py_app/
+COPY /src/py_app/ /src/py_app/
+WORKDIR /src/py_app/
 
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.11.0/wait /wait
 RUN chmod +x /wait
