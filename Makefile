@@ -14,3 +14,6 @@ upp:
 
 migrate:
 	docker-compose run py_app bash -c '/wait && alembic upgrade head'
+
+test:
+	docker-compose run py_app pytest
