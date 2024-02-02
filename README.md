@@ -2,9 +2,9 @@
 
 ## Start
 Клонировать репозиторий:
-````
+```
 >>> git clone https://github.com/833FCAK3/brandpol_test.git
-````
+```
 - Установить [docker](https://docs.docker.com/engine/install/)
 - Установить [docker-compose](https://docs.docker.com/compose/install/)
 - На Windows для удобства Установить [MAKE Windows](http://gnuwin32.sourceforge.net/packages/make.htm)
@@ -46,8 +46,9 @@
 
 ### На питоне
 Все эндпойнты находятся в файле `py_app\app.py`
-
-* `GET /greet` - эндпойнт приветствия пользователя. Сохраняет отправленное сообщение, предоставленное имя и дату + время запроса.
+```
+* GET /greet - эндпойнт приветствия пользователя. Сохраняет отправленное сообщение, предоставленное имя и дату + время запроса.
+    
     Args:
         name (str): имя пользователя, default="пользователь"
         db (Session): соединение с базой данных
@@ -58,9 +59,8 @@
             http://127.0.0.1:8000/greet?name=alex
         Response:
             Привет, Пользователь, от Python!
-        
 
-* `GET /greet/history` - эндпойнт запроса истории приветствий пользователя.
+* GET /greet/history - эндпойнт запроса истории приветствий пользователя.
     Args:
         db (Session): соединение с базой данных
     Returns:
@@ -81,11 +81,13 @@
                     "id": 2
                 }
             ]
+```
+
 ---
 
 ### На Go
 Все эндпойнты находятся в файле `go_app\app.go`
-
+```
 * `GET /greet` - эндпойнт приветствия пользователя. Сохраняет отправленное сообщение и дату + время запроса.
     Returns:
         Объект response со статусным кодом 200 и string объектом приветствия
@@ -126,3 +128,4 @@
             http://localhost:8080/python_greet_history
         Response:
             [{"name": "Lexa", "date": "2024-02-01T14:06:05.428881", "id": 1}]
+```
