@@ -53,7 +53,7 @@ services:
       - go_postgres_db
     env_file:
       - .env
-    command: sh -c "go run app.go"
+    command: sh -c "go run app.go config.go"
     environment:
       WAIT_HOSTS: go_postgres_db:5432
     ports:

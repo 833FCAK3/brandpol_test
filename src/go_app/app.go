@@ -1,79 +1,79 @@
 package main
 
 import (
-    "gorm.io/driver/postgres"
-    "gorm.io/gorm"
-    "github.com/labstack/echo/v4"
 	"fmt"
-	"log"
-    "os"
-    "strconv"
-    "net/http"
-    "time"
 	"io"
+	"log"
+	"net/http"
+	"os"
+	"strconv"
+	"time"
+
+	"github.com/labstack/echo/v4"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 type Greeting struct {
-	ID        uint      `gorm:"primaryKey" json:"id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"-"`
+	ID        uint           `gorm:"primaryKey" json:"id"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"-"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
-	Message   string    `json:"message"`
+	Message   string         `json:"message"`
 }
 
 type Python_Greet struct {
 	gorm.Model
-	Name      string `json:"name"`
+	Name           string `json:"name"`
 	PythonGreeting string `json:"python_greet"`
 }
 
 type Python_Greet_History struct {
-	ID        uint      `gorm:"primaryKey" json:"id"`
-	PythonGreetings string 	`json:"greetings"`
-	CreatedAt time.Time
+	ID              uint   `gorm:"primaryKey" json:"id"`
+	PythonGreetings string `json:"greetings"`
+	CreatedAt       time.Time
 }
 
 func main() {
-    // Retrieve port from the environment variables
-    portStr := os.Getenv("GO_PORT")
-    if portStr == "" {
-        portStr = "8080" // Default port if not specified in .env
-    }
+	// Retrieve port from the environment variables
+	portStr := os.Getenv("GO_PORT")
+	if portStr == "" {
+		portStr = "8080" // Default port if not specified in .env
+	}
 
-    // Convert the port string to an integer
-    port, err := strconv.Atoi(portStr)
-    if err != nil {
-        log.Fatal("Invalid PORT value in .env")
-    }
+	// Convert the port string to an integer
+	port, err := strconv.Atoi(portStr)
+	if err != nil {
+		log.Fatal("Invalid PORT value in .env")
+	}
 
-    // PostgreSQL connection string
-    dsn := "host=go_postgres_db user=postgres password=postgres dbname=postgres port=5432 sslmode=disable"
+	// PostgreSQL connection string
+	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s sslmode=disable", DbHost, DbPort, DbUser, DbPassword)
 
-    // Connect to the database
-    db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-    if err != nil {
-        panic("failed to connect database" + err.Error())
-    }
+	// Connect to the database
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect database" + err.Error())
+	}
 
-    // Auto-migrate the Greeting table
-    db.AutoMigrate(&Greeting{}, &Python_Greet{}, &Python_Greet_History{})
+	// Auto-migrate the Greeting table
+	db.AutoMigrate(&Greeting{}, &Python_Greet{}, &Python_Greet_History{})
 
-    // Create an Echo instance
-    e := echo.New()
+	// Create an Echo instance
+	e := echo.New()
 
-	
-    // Endpoint to greet and save timestamp to the database
-    e.GET("/greet", func(c echo.Context) error {
-        // Save timestamp to the database
-        greeting := Greeting{
-            Message:   "Привет от Go!",
-            CreatedAt: time.Now(),
-        }
-        db.Create(&greeting)
+	// Endpoint to greet and save timestamp to the database
+	e.GET("/greet", func(c echo.Context) error {
+		// Save timestamp to the database
+		greeting := Greeting{
+			Message:   "Привет от Go!",
+			CreatedAt: time.Now(),
+		}
+		db.Create(&greeting)
 
-        // Return the greeting message
-        return c.String(http.StatusOK, greeting.Message)
-    })
+		// Return the greeting message
+		return c.String(http.StatusOK, greeting.Message)
+	})
 
 	// Endpoint to retrieve all greetings from the database
 	e.GET("/greet/history", func(c echo.Context) error {
@@ -94,7 +94,7 @@ func main() {
 		}
 
 		// Specify the URL to send the GET request to
-		pythonAPIURL := "http://py_app:8000/greet"
+		pythonAPIURL := fmt.Sprintf("http://%s:8000/greet", PyAppHost)
 
 		// Send GET request to Python API
 		response, err := http.Get(fmt.Sprintf("%s?name=%s", pythonAPIURL, name))
@@ -112,8 +112,8 @@ func main() {
 		// Save the received Python greeting to the database
 		pythonGreeting := string(body)
 		greeting := Python_Greet{
-			Name:			name,
-			PythonGreeting:	pythonGreeting,
+			Name:           name,
+			PythonGreeting: pythonGreeting,
 		}
 		db.Create(&greeting)
 
@@ -125,7 +125,7 @@ func main() {
 	e.GET("/python_greet_history", func(c echo.Context) error {
 
 		// Specify the URL to send the GET request to
-		pythonAPIURL := "http://py_app:8000/greet/history"
+		pythonAPIURL := fmt.Sprintf("http://%s:8000/greet/history", PyAppHost)
 
 		// Send GET request to Python API
 		response, err := http.Get(pythonAPIURL)
@@ -152,5 +152,5 @@ func main() {
 		return c.String(http.StatusOK, data)
 	})
 
-    e.Start(":" + strconv.Itoa(port))
+	e.Start(":" + strconv.Itoa(port))
 }

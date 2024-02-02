@@ -1,5 +1,7 @@
 all: build migrate up
 
+test: testpy testgo
+
 build:
 	docker-compose build --no-cache
 
@@ -15,5 +17,8 @@ upp:
 migrate:
 	docker-compose run py_app bash -c '/wait && alembic upgrade head'
 
-test:
+testgo:
+	docker-compose run go_app go test -v
+
+testpy:
 	docker-compose run py_app pytest
