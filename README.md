@@ -27,7 +27,7 @@
 
 - Тесты.
 ````
->>> test
+>>> make test
 ````
 
 *Отдельно python и go приложения тестятся командами make testpy и make testgo.
