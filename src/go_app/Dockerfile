@@ -1,6 +1,6 @@
 FROM golang:1.21.6-alpine
 
-ENV TZ=$TIMEZONE
+RUN apk add --no-cache tzdata
 
 WORKDIR /src/go_app/
 
