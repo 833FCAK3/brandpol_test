@@ -1,3 +1,5 @@
+include .env
+
 all: build migrate up
 
 test: testpy testgo
@@ -22,3 +24,9 @@ testgo:
 
 testpy:
 	docker-compose run py_app pytest
+
+devgo:
+	docker-compose run --rm --volume=${CURDIR}/src/go_app:/src/go_app go_app sh -c "go run app.go config.go"
+
+devpy:
+	docker-compose run --rm --volume=${CURDIR}/src/py_app:/src/py_app py_app bash -c "uvicorn app:app --host 0.0.0.0 --port ${PY_PORT}"
