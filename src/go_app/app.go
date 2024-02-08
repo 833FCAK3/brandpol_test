@@ -53,7 +53,7 @@ func main() {
 	// Connect to the database
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		panic("failed to connect database" + err.Error())
+		panic("failed to connect database: " + err.Error())
 	}
 
 	// Auto-migrate the Greeting table
