@@ -4,7 +4,7 @@ services:
   py_postgres_db:
     container_name: py_postgres_db
     build: ./py_postgres
-    image: ${IMAGE_PY_POSTGRES_DB}
+    image: py__postgres_db
     restart: always
     volumes:
       - py_postgres_db_volume:/var/lib/py_postgresql/data/
@@ -18,7 +18,7 @@ services:
   go_postgres_db:
     container_name: go_postgres_db
     build: ./go_postgres
-    image: ${IMAGE_GO_POSTGRES_DB}
+    image: go__postgres_db
     restart: always
     volumes:
       - go_postgres_db_volume:/var/lib/go_postgresql/data/
@@ -34,7 +34,7 @@ services:
     build:
       context: .
       dockerfile: ./src/py_app/Dockerfile
-    image: ${IMAGE_PY_APP}
+    image: py__app
     restart: always
     depends_on:
       - py_postgres_db
@@ -51,7 +51,7 @@ services:
     build:
       context: .
       dockerfile: ./src/go_app/Dockerfile
-    image: ${IMAGE_GO_APP}
+    image: go__app
     restart: always
     depends_on:
       - go_postgres_db
