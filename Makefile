@@ -1,6 +1,6 @@
 include .env
 
-all: build migrate up
+all: build down migrate up
 
 test: testpy testgo
 
@@ -32,7 +32,7 @@ devtestgo:
 	docker-compose run --rm --volume=${CURDIR}/src/go_app:/src/go_app go_app sh -c "/wait && go test -v"
 
 devpy:
-	docker-compose run --rm --volume=${CURDIR}/src/py_app:/src/py_app py_app bash -c "uvicorn app:app --host 0.0.0.0 --port ${PY_PORT}"
+	docker-compose run --rm --volume=${CURDIR}/src/py_app:/src/py_app py_app bash -c "uvicorn app:app --host 0.0.0.0 --port ${PY_PORT} --reload"
 
 devtestpy:
 	docker-compose run --rm --volume=${CURDIR}/src/py_app:/src/py_app py_app pytest -v
