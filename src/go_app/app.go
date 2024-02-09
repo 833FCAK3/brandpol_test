@@ -5,8 +5,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os"
-	"strconv"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -35,18 +33,6 @@ type Python_Greet_History struct {
 }
 
 func main() {
-	// Retrieve port from the environment variables
-	portStr := os.Getenv("GO_PORT")
-	if portStr == "" {
-		portStr = "8080" // Default port if not specified in .env
-	}
-
-	// Convert the port string to an integer
-	port, err := strconv.Atoi(portStr)
-	if err != nil {
-		log.Fatal("Invalid PORT value in .env")
-	}
-
 	// PostgreSQL connection string
 	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s sslmode=disable", DbHost, DbPort, DbUser, DbPassword)
 
@@ -94,7 +80,7 @@ func main() {
 		}
 
 		// Specify the URL to send the GET request to
-		pythonAPIURL := fmt.Sprintf("http://%s:8000/greet", PyAppHost)
+		pythonAPIURL := fmt.Sprintf("http://%s:%s/greet", PyAppHost, PyPort)
 
 		// Send GET request to Python API
 		response, err := http.Get(fmt.Sprintf("%s?name=%s", pythonAPIURL, name))
@@ -125,7 +111,7 @@ func main() {
 	e.GET("/python_greet_history", func(c echo.Context) error {
 
 		// Specify the URL to send the GET request to
-		pythonAPIURL := fmt.Sprintf("http://%s:8000/greet/history", PyAppHost)
+		pythonAPIURL := fmt.Sprintf("http://%s:%s/greet/history", PyAppHost, PyPort)
 
 		// Send GET request to Python API
 		response, err := http.Get(pythonAPIURL)
@@ -152,5 +138,5 @@ func main() {
 		return c.String(http.StatusOK, data)
 	})
 
-	e.Start(":" + strconv.Itoa(port))
+	e.Start(":" + GoPort)
 }

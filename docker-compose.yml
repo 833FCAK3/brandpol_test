@@ -40,9 +40,9 @@ services:
       - py_postgres_db
     env_file:
       - .env
-    command: bash -c "uvicorn app:app --host 0.0.0.0 --port ${PY_PORT:-8000}" 
     environment:
-      WAIT_HOSTS: py_postgres_db:{PY_POSTGRES_PORT}
+      WAIT_HOSTS: py_postgres_db:${PY_POSTGRES_PORT}
+    command: bash -c "uvicorn app:app --host 0.0.0.0 --port ${PY_PORT:-8000}" 
     ports:
       - ${PY_PORT:-8000}:${PY_PORT:-8000}
 
@@ -57,9 +57,9 @@ services:
       - go_postgres_db
     env_file:
       - .env
-    command: sh -c "go run app.go config.go"
     environment:
-      WAIT_HOSTS: go_postgres_db:{GO_POSTGRES_PORT}
+      WAIT_HOSTS: go_postgres_db:${GO_POSTGRES_PORT}
+    command: sh -c "go run app.go config.go"
     ports:
       - ${GO_PORT:-8080}:${GO_PORT:-8080}
 

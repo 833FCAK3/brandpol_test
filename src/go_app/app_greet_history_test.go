@@ -10,7 +10,7 @@ import (
 
 func TestGreetHistoryEndpoint(t *testing.T) {
 
-	response, err := http.Get(fmt.Sprintf("http://%s:8080/greet/history", AppHost))
+	response, err := http.Get(fmt.Sprintf("http://%s:%s/greet/history", AppHost, PyPort))
 	if err != nil {
 		fmt.Println("Error sending request to Python API")
 	}
