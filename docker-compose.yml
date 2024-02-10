@@ -10,10 +10,8 @@ services:
       - py_postgres_db_volume:/var/lib/py_postgresql/data/
     env_file:
       - .env
-    command:
-      - -p ${PY_POSTGRES_PORT}
     # ports:
-    #   - ${PY_POSTGRES_PORT}:${PY_POSTGRES_PORT}
+    #   - ${PY_POSTGRES_PORT}:5432
 
   go_postgres_db:
     container_name: go_postgres_db
@@ -24,10 +22,8 @@ services:
       - go_postgres_db_volume:/var/lib/go_postgresql/data/
     env_file:
       - .env
-    command:
-      - -p ${GO_POSTGRES_PORT}
     # ports:
-    #   - ${GO_POSTGRES_PORT}:${GO_POSTGRES_PORT}
+    #   - ${GO_POSTGRES_PORT}:5432
 
   py_app:
     container_name: py_app
@@ -41,7 +37,7 @@ services:
     env_file:
       - .env
     environment:
-      WAIT_HOSTS: py_postgres_db:${PY_POSTGRES_PORT}
+      WAIT_HOSTS: py_postgres_db:5432
     command: bash -c "uvicorn app:app --host 0.0.0.0 --port ${PY_PORT:-8000}" 
     ports:
       - ${PY_PORT:-8000}:${PY_PORT:-8000}
@@ -58,7 +54,7 @@ services:
     env_file:
       - .env
     environment:
-      WAIT_HOSTS: go_postgres_db:${GO_POSTGRES_PORT}
+      WAIT_HOSTS: go_postgres_db:5432
     command: sh -c "go run app.go config.go"
     ports:
       - ${GO_PORT:-8080}:${GO_PORT:-8080}

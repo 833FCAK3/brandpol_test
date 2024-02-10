@@ -36,3 +36,6 @@ devpy:
 
 devtestpy:
 	docker-compose run --rm --volume=${CURDIR}/src/py_app:/src/py_app py_app pytest -v
+
+cfg:
+	docker-compose config $(s)
