@@ -12,7 +12,7 @@ app = FastAPI()
 
 
 @app.get("/greet")
-def greet(name: str = "пользователь", db: Session = Depends(get_postgres_db)):
+def greet(name: str = "пользователь", db: Session = Depends(get_postgres_db)) -> Response:
     name = name.capitalize()
     db_greeting = Greeting(name=name)
     db.add(db_greeting)
@@ -22,6 +22,6 @@ def greet(name: str = "пользователь", db: Session = Depends(get_post
 
 
 @app.get("/greet/history")
-def get_history(db: Session = Depends(get_postgres_db)):
+def get_history(db: Session = Depends(get_postgres_db)) -> Response:
     data = json.dumps(jsonable_encoder(db.query(Greeting).all()), ensure_ascii=False)
     return Response(status_code=200, content=data, media_type="application/json")
