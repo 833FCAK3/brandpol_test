@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -78,6 +79,7 @@ func main() {
 		if name == "" {
 			return c.String(http.StatusBadRequest, "Name parameter is required")
 		}
+		name = url.QueryEscape(name)
 
 		// Specify the URL to send the GET request to
 		pythonAPIURL := fmt.Sprintf("http://%s:%s/greet", PyAppHost, PyPort)
