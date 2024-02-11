@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"myapp/config"
 	"io"
 	"log"
 	"net/http"
@@ -35,7 +36,7 @@ type Python_Greet_History struct {
 
 func main() {
 	// PostgreSQL connection string
-	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s sslmode=disable", DbHost, DbPort, DbUser, DbPassword)
+	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s sslmode=disable", config.DbHost, config.DbPort, config.DbUser, config.DbPassword)
 
 	// Connect to the database
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
@@ -82,7 +83,7 @@ func main() {
 		name = url.QueryEscape(name)
 
 		// Specify the URL to send the GET request to
-		pythonAPIURL := fmt.Sprintf("http://%s:%s/greet", PyAppHost, PyPort)
+		pythonAPIURL := fmt.Sprintf("http://%s:%s/greet", config.PyAppHost, config.PyPort)
 
 		// Send GET request to Python API
 		response, err := http.Get(fmt.Sprintf("%s?name=%s", pythonAPIURL, name))
@@ -113,7 +114,7 @@ func main() {
 	e.GET("/python_greet_history", func(c echo.Context) error {
 
 		// Specify the URL to send the GET request to
-		pythonAPIURL := fmt.Sprintf("http://%s:%s/greet/history", PyAppHost, PyPort)
+		pythonAPIURL := fmt.Sprintf("http://%s:%s/greet/history", config.PyAppHost, config.PyPort)
 
 		// Send GET request to Python API
 		response, err := http.Get(pythonAPIURL)
@@ -140,5 +141,5 @@ func main() {
 		return c.String(http.StatusOK, data)
 	})
 
-	e.Start(":" + GoPort)
+	e.Start(":" + config.GoPort)
 }
