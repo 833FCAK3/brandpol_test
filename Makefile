@@ -16,6 +16,12 @@ up:
 upp:
 	docker-compose up
 
+stop:
+	docker-compose stop
+
+cleanup:
+	docker image prune -f
+
 migrate:
 	docker-compose run py_app bash -c '/wait && alembic upgrade head'
 
