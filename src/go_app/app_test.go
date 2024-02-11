@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"myapp/config"
+	"myapp/utils"
 	"os"
 	"testing"
 
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -17,8 +18,7 @@ func TestMain(m *testing.M) {
 	var err error
 	testDB, err = createTestDatabase(config.Test_db)
 	if err != nil {
-		fmt.Printf("Error creating test database: %v\n", err)
-		os.Exit(1)
+		log.Fatalf("Error creating test database: %v\n", err)
 	}
 
 	// Run tests
@@ -26,8 +26,7 @@ func TestMain(m *testing.M) {
 
 	// Clean up test database
 	if err := dropTestDatabase(config.Test_db); err != nil {
-		fmt.Printf("Error dropping test database %v: %v\n", config.Test_db, err)
-		os.Exit(1)
+		log.Fatalf("Error dropping test database %v: %v\n", config.Test_db, err)
 	}
 
 	os.Exit(exitCode)
@@ -35,8 +34,7 @@ func TestMain(m *testing.M) {
 
 func createTestDatabase(dbname string) (*gorm.DB, error) {
 	// Connect to the PostgreSQL server
-	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s sslmode=disable", config.DbHost, config.DbPort, config.DbUser, config.DbPassword)
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := utils.DbConnection("")
 	if err != nil {
 		return nil, err
 	}
@@ -55,8 +53,7 @@ func createTestDatabase(dbname string) (*gorm.DB, error) {
 	}
 
 	// Connect to the newly created test database
-	dsn = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", config.DbHost, config.DbPort, config.DbUser, config.DbPassword, config.DbName)
-	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err = utils.DbConnection(dbname)
 	if err != nil {
 		return nil, err
 	}
@@ -66,17 +63,15 @@ func createTestDatabase(dbname string) (*gorm.DB, error) {
 
 func dropTestDatabase(dbName string) error {
 	// Connect to the PostgreSQL server
-	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s sslmode=disable", config.DbHost, config.DbPort, config.DbUser, config.DbPassword)
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := utils.DbConnection("")
 	if err != nil {
 		return err
 	}
 
 	// Drop the test database
-	result := db.Exec(fmt.Sprintf("DROP DATABASE IF EXISTS %s WITH (FORCE)", dbName))
-	if result.Error != nil {
-		fmt.Printf("Error dropping test database %v: \n", dbName)
-		return result.Error
+	dropped := db.Exec(fmt.Sprintf("DROP DATABASE IF EXISTS %s WITH (FORCE)", dbName))
+	if dropped.Error != nil {
+		return dropped.Error
 	}
 	return nil
 }

@@ -2,15 +2,15 @@ package main
 
 import (
 	"fmt"
-	"myapp/config"
 	"io"
 	"log"
+	"myapp/config"
+	"myapp/utils"
 	"net/http"
 	"net/url"
 	"time"
 
 	"github.com/labstack/echo/v4"
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -35,13 +35,10 @@ type Python_Greet_History struct {
 }
 
 func main() {
-	// PostgreSQL connection string
-	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s sslmode=disable", config.DbHost, config.DbPort, config.DbUser, config.DbPassword)
-
 	// Connect to the database
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := utils.DbConnection("")
 	if err != nil {
-		panic("failed to connect database: " + err.Error())
+		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
 	// Auto-migrate the Greeting table

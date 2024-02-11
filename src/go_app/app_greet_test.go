@@ -1,15 +1,13 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"myapp/config"
+	"myapp/utils"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
-
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
@@ -38,11 +36,10 @@ func handleGreetEndpoint(c echo.Context) error {
 		CreatedAt: time.Now(),
 	}
 
-	// Connect to the database
-	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", config.DbHost, config.DbPort, config.DbUser, config.DbPassword, config.Test_db)
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	// Connect to the test database
+	db, err := utils.DbConnection(config.Test_db)
 	if err != nil {
-		panic("failed to connect database" + err.Error())
+		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
 	db.AutoMigrate(&Greeting{})

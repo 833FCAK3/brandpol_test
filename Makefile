@@ -27,7 +27,7 @@ testpy:
 
 devgo:
 	docker-compose stop go_app
-	docker-compose run --rm --volume=${CURDIR}/src/go_app:/src/go_app --publish=${GO_PORT}:${GO_PORT} go_app sh -c "/wait && go run app.go config.go"
+	docker-compose run --rm --volume=${CURDIR}/src/go_app:/src/go_app --publish=${GO_PORT}:${GO_PORT} go_app sh -c "/wait && go run app.go"
 
 devtestgo:
 	docker-compose run --rm --volume=${CURDIR}/src/go_app:/src/go_app go_app sh -c "/wait && go test -v"

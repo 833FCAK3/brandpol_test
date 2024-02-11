@@ -21,7 +21,7 @@ var DbPassword = getenv("POSTGRES_PASSWORD", "postgres")
 var Test_db = getenv("POSTGRES_DB_TEST", "postgres_test")
 
 const (
-	AppHost    = "go_app"
-	DbPort = 5432
-	PyAppHost  = "py_app"
+	AppHost   = "go_app"
+	DbPort    = 5432
+	PyAppHost = "py_app"
 )

@@ -55,7 +55,7 @@ services:
       - .env
     environment:
       WAIT_HOSTS: go_postgres_db:5432
-    command: sh -c "go run app.go config.go"
+    command: sh -c "go run app.go"
     ports:
       - ${GO_PORT:-8080}:${GO_PORT:-8080}
 

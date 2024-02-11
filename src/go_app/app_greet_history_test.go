@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"net/http"
+	"log"
 	"myapp/config"
+	"net/http"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -13,7 +14,7 @@ func TestGreetHistoryEndpoint(t *testing.T) {
 
 	response, err := http.Get(fmt.Sprintf("http://%s:%s/greet/history", config.PyAppHost, config.PyPort))
 	if err != nil {
-		fmt.Println("Error sending request to Python API")
+		log.Fatalf("Error sending request to Python API: %v", err)
 	}
 	defer response.Body.Close()
 
