@@ -1,5 +1,3 @@
-include .env
-
 all: build down migrate up
 
 test: testpy testgo
@@ -19,7 +17,7 @@ upp:
 stop:
 	docker-compose stop
 
-cleanup:
+clnimg:
 	docker image prune -f
 
 migrate:
